@@ -40,10 +40,10 @@
                 android:id="@+id/u_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/Login_text"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/Login_text"
                 android:background="@drawable/round_corner_view"
                 android:drawableLeft="@drawable/emailicon"
                 android:drawablePadding="5dp"
@@ -83,32 +83,32 @@
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
-                <TextView
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/loginbtn"
-                    android:id="@+id/reset"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginStart="8dp"
-                    android:padding="5dp"
-                    android:text="FORGOT PASSWORD?"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/loginbtn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:text="FORGOT PASSWORD?"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/continue_without_login"
-                    android:layout_width="201dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="0dp"
-                    android:padding="5dp"
-                    android:text="CONTINUE WITHOUT LOGIN"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold"
-                    android:layout_below="@+id/reset"
-                    android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/continue_without_login"
+                android:layout_width="201dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reset"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="0dp"
+                android:padding="5dp"
+                android:text="CONTINUE WITHOUT LOGIN"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -128,13 +128,13 @@
                 android:layout_below="@+id/textView2"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="20dp"
                 android:text="Sign up"
-                android:textSize="20sp"
                 android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>

@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import javax.security.auth.Subject;
+
 public class HomeActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
@@ -279,13 +281,15 @@ public class HomeActivity extends AppCompatActivity {
                     }
                     case R.id.feedback: {
 
-                        Intent intent = new Intent(Intent.ACTION_SENDTO);
-                        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                        startActivity(new Intent(HomeActivity.this, FeedbackActivity.class));
+
+                        /*Intent intent = new Intent(Intent.ACTION_SENDTO);*/
+                        /*intent.setData(Uri.parse("mailto:")); // only email apps should handle this
                         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"parammoradiya98@gmail.com","akashgolakiya501@gmail.com","milanmiyani11@gmail.com","rajnigujarati567@gmail.com","Jaimiknavadiya@gmail.com"});
-                        if (intent.resolveActivity(getPackageManager()) != null) {
+                      *//*  if (intent.resolveActivity(getPackageManager()) != null) {
                             startActivity(intent);
-                        }
-                            break;
+                        }*/
+                        break;
                     }
                 }
                 return true;

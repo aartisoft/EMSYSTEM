@@ -57,7 +57,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private static final String DATE_PATTERN =
             "(0?[1-9]|1[012]) [/.-] (0?[1-9]|[12][0-9]|3[01]) [/.-] ((19|20)\\d\\d)";
-//report
+    //report
     //hcbhjbvhjb
     ProgressBar mprogressbar;
     ImageView mImage;
@@ -67,15 +67,15 @@ public class ReportActivity extends AppCompatActivity {
     private int mYear, mMonth, mDay, mHour, mMinute;
     int PERMISSION_REQUEST_CODE = 100;
     FirebaseStorage storage;
-    StorageReference mstorageReference,ref;
- private static final int REQUEST_IMAGE_CAPTURE= 101;
+    StorageReference mstorageReference, ref;
+
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri mImageUri;
 
     private FirebaseAuth mAuth;
     FirebaseUser Current_user;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference mDatabaseref,mDatabaseref1;
+    private DatabaseReference mDatabaseref, mDatabaseref1;
     //progress dialog
     private ProgressDialog mRegprogress;
     private Toolbar mtoolbar;
@@ -96,12 +96,12 @@ public class ReportActivity extends AppCompatActivity {
         mbtncooseimag = (Button) findViewById(R.id.btnChooseimage);
         mbtnuploadimage = (Button) findViewById(R.id.btnUploagImage);
         mImage = (ImageView) findViewById(R.id.add_Image);
-        mMassage = (EditText)findViewById(R.id.message);
+        mMassage = (EditText) findViewById(R.id.message);
         mtoolbar = (Toolbar) findViewById(R.id.Register_toolbar);
         mDatabaseref = FirebaseDatabase.getInstance().getReference("reportmsg");
         mstorageReference = FirebaseStorage.getInstance().getReference("Images");
-        mtxtDate=(TextView) findViewById(R.id.in_date);
-        mtxtTime=(TextView) findViewById(R.id.in_time);
+        mtxtDate = (TextView) findViewById(R.id.in_date);
+        mtxtTime = (TextView) findViewById(R.id.in_time);
 
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setTitle("Report");
@@ -111,7 +111,7 @@ public class ReportActivity extends AppCompatActivity {
         mbtncooseimag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               chooseImage();
+                chooseImage();
             }
         });
 
@@ -129,52 +129,44 @@ public class ReportActivity extends AppCompatActivity {
         mtxtTime.setText(timeString);
 
 
-            mbtnuploadimage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(CheckNetwork.isInternetAvailable(ReportActivity.this)) {
-                        storage = FirebaseStorage.getInstance();
-                        mstorageReference = storage.getReference();
+        mbtnuploadimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CheckNetwork.isInternetAvailable(ReportActivity.this)) {
+                    storage = FirebaseStorage.getInstance();
+                    mstorageReference = storage.getReference();
 
-                        msg = mMassage.getText().toString();
-                        currentdate = mtxtDate.getText().toString();
-                        currenttime = mtxtTime.getText().toString();
-                        Current_user = FirebaseAuth.getInstance().getCurrentUser();
-                        uid = Current_user.getUid();
+                    msg = mMassage.getText().toString();
+                    currentdate = mtxtDate.getText().toString();
+                    currenttime = mtxtTime.getText().toString();
+                    Current_user = FirebaseAuth.getInstance().getCurrentUser();
+                    uid = Current_user.getUid();
 
 
-                        mDatabaseref = FirebaseDatabase.getInstance().getReference().child("reportmsg").child(uid);
+                    mDatabaseref = FirebaseDatabase.getInstance().getReference().child("reportmsg").child(uid);
 
-                        uploadImage();
-                        //this is changed
-                        mbtncooseimag.setEnabled(false);
-                        mbtnuploadimage.setEnabled(false);
-                    }
-                    else{
-                        Snackbar snackbar = Snackbar.make(mbtnuploadimage, "No Internet Connection", Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                    }
+                    uploadImage();
+                    //this is changed
+                    mbtnuploadimage.setEnabled(false);
+                    mbtncooseimag.setEnabled(false);
+
+
+                } else {
+                    Snackbar snackbar = Snackbar.make(mbtnuploadimage, "No Internet Connection", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
-            });
+            }
+        });
 
 
     }
 
-    /*public void btnsubmit_data(View view) {
-
-
-
-    }*/
-
     void chooseImage() {
-  Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager())!=null){
-            startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
-        }
-      /*  Intent intent = new Intent();
+
+        Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);*/
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
            /* @Override
             protected void onActivityResult ( int requestCode, int resultCode, Intent data){
                 super.onActivityResult(requestCode, resultCode, data);
@@ -193,12 +185,7 @@ public class ReportActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-          if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode==RESULT_OK){
-           Bundle bundle=data.getExtras();
-           Bitmap bitmap= (Bitmap) bundle.get("data");
-           mImage.setImageBitmap(bitmap);
-       }
-       /* super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
@@ -209,7 +196,7 @@ public class ReportActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     void uploadImage() {
@@ -235,7 +222,7 @@ public class ReportActivity extends AppCompatActivity {
                             mDatabaseref.setValue(upload);*/
                             Toast.makeText(ReportActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
 
-                            startActivity(new Intent(ReportActivity.this,HomeActivity.class));
+                            startActivity(new Intent(ReportActivity.this, HomeActivity.class));
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -251,7 +238,7 @@ public class ReportActivity extends AppCompatActivity {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
                             dataUpload();
-                           progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
                     });
         }
@@ -295,7 +282,7 @@ public class ReportActivity extends AppCompatActivity {
                             dataSnapshot.getRef().child("Date").setValue(currentdate);
                             dataSnapshot.getRef().child("Time").setValue(currenttime);
                             dataSnapshot.getRef().child("URL").setValue(uri.toString());
-                           // Toast.makeText(ReportActivity.this, "Submit", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(ReportActivity.this, "Submit", Toast.LENGTH_SHORT).show();
                                 /*viewReports.setMessage(msg);
                                 viewReports.setDate(date);
                                 viewReports.setTime(time);
@@ -343,7 +330,7 @@ public class ReportActivity extends AppCompatActivity {
         if(!validate_message()){
           return;
             *//*  Toast.makeText(ReportActivity.this, "Plese write about problem", Toast.LENGTH_LONG).show();
-        *//*}else {
+     *//*}else {
 
             FirebaseUser Current_user = FirebaseAuth.getInstance().getCurrentUser();
             String uid = Current_user.getUid();
@@ -472,7 +459,7 @@ public class ReportActivity extends AppCompatActivity {
             mMassage.setError(null);
             return true;
         }*/
-    }
+}
 
 
     /*@Override
@@ -509,9 +496,9 @@ public class ReportActivity extends AppCompatActivity {
         }
     }
 */
-    /*public void btnsubmit_data(View view) {
+/*public void btnsubmit_data(View view) {
 
-       *//* storage = FirebaseStorage.getInstance();
+ *//* storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();*//*
 
 
@@ -634,7 +621,7 @@ public class ReportActivity extends AppCompatActivity {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot
                                     .getTotalByteCount());
                           *//*  mprogressbar.setProgress((int)progress);*//*
-                           *//* progressDialog.setMessage("Uploaded "+(int)progress+"%");*//*
+ *//* progressDialog.setMessage("Uploaded "+(int)progress+"%");*//*
                         }
                     });
         }
