@@ -46,11 +46,6 @@ dependencies {
 
     /* androidTestImplementation 'com.amdroid.support.test:runner:1.0.1'
     androidTestImplementation 'com.amdroid.support.test.espresso:espresso-core:3.0.1'*/
-
-    implementation files('libs/activation.jar')
-    implementation files('libs/additional.jar')
-    implementation files('libs/mail.jar')
-
 }
 apply plugin: 'com.google.gms.google-services'
 
