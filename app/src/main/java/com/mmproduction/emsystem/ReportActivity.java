@@ -68,7 +68,7 @@ public class ReportActivity extends AppCompatActivity {
     int PERMISSION_REQUEST_CODE = 100;
     FirebaseStorage storage;
     StorageReference mstorageReference,ref;
-
+ private static final int REQUEST_IMAGE_CAPTURE= 101;
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri mImageUri;
 
@@ -167,11 +167,14 @@ public class ReportActivity extends AppCompatActivity {
     }*/
 
     void chooseImage() {
-
-        Intent intent = new Intent();
+  Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager())!=null){
+            startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+        }
+      /*  Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);*/
            /* @Override
             protected void onActivityResult ( int requestCode, int resultCode, Intent data){
                 super.onActivityResult(requestCode, resultCode, data);
@@ -190,7 +193,12 @@ public class ReportActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+          if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode==RESULT_OK){
+           Bundle bundle=data.getExtras();
+           Bitmap bitmap= (Bitmap) bundle.get("data");
+           mImage.setImageBitmap(bitmap);
+       }
+       /* super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
@@ -201,7 +209,7 @@ public class ReportActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     void uploadImage() {
