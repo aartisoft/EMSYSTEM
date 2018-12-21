@@ -46,15 +46,16 @@
             android:layout_marginTop="15dp"
             android:src="@drawable/cameraicon" />
         </LinearLayout>
+
         <Button
             android:id="@+id/btnChooseimage"
-            android:layout_width="245dp"
+            android:layout_width="181dp"
             android:layout_height="wrap_content"
-           android:layout_below="@id/image_linearlayout"
-            android:layout_marginTop="10dp"
+            android:layout_below="@id/image_linearlayout"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:text="Select Photo"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/message"

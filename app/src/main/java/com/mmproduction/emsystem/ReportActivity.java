@@ -50,22 +50,11 @@ import java.util.regex.Pattern;
 
 public class ReportActivity extends AppCompatActivity {
 
-    private Pattern pattern;
-    private Matcher matcher;
-
-    String ImageURL, msg, currentdate, currenttime, uid;
-
-    private static final String DATE_PATTERN =
-            "(0?[1-9]|1[012]) [/.-] (0?[1-9]|[12][0-9]|3[01]) [/.-] ((19|20)\\d\\d)";
-    //report
-    //hcbhjbvhjb
-    ProgressBar mprogressbar;
+    String msg, currentdate, currenttime, uid;
     ImageView mImage;
     Button mbtncooseimag, mbtnuploadimage;
     EditText mMassage;
     TextView mtxtDate, mtxtTime;
-    private int mYear, mMonth, mDay, mHour, mMinute;
-    int PERMISSION_REQUEST_CODE = 100;
     FirebaseStorage storage;
     StorageReference mstorageReference, ref;
 
@@ -79,7 +68,6 @@ public class ReportActivity extends AppCompatActivity {
     //progress dialog
     private ProgressDialog mRegprogress;
     private Toolbar mtoolbar;
-    private ValueEventListener mPostListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +102,6 @@ public class ReportActivity extends AppCompatActivity {
                 chooseImage();
             }
         });
-
 
         mDatabaseref1 = FirebaseDatabase.getInstance().getReference("user");
 
@@ -161,6 +148,9 @@ public class ReportActivity extends AppCompatActivity {
 
     }
 
+
+
+    //this method for choose image f
     void chooseImage() {
 
         Intent intent = new Intent();
