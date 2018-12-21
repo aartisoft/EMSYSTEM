@@ -31,7 +31,7 @@ public class ViewallReportActivity extends AppCompatActivity {
     ArrayList<String> mlist;
     ArrayAdapter<String> madapter;
     ViewReports malltext;
-    TextView name, email, message, date, time;
+    TextView name, email, message, date, time,location;
     ImageView image;
     String urlImage;
 
@@ -62,7 +62,9 @@ public class ViewallReportActivity extends AppCompatActivity {
                 message = v.findViewById(R.id.idtextinfo);
                 date = v.findViewById(R.id.iddateinfo);
                 time = v.findViewById(R.id.idtimeinfo);
+                location = v.findViewById(R.id.idlocationinfo);
                 image = v.findViewById(R.id.idimageinfo);
+
                 //ImageView image = v.findViewById(R.id.idimageinfo);
 
                 ViewReports rep = (ViewReports) model;
@@ -73,6 +75,7 @@ public class ViewallReportActivity extends AppCompatActivity {
                 name.setText("Name : " + rep.getName().toString());
                 email.setText("Email : " + rep.getEmail().toString());
                 message.setText("Message : " + rep.getMessage().toString());
+                location.setText("Location : " + rep.getLocation().toString());
                 urlImage = rep.getURL();
                 //Picasso.get().load(rep.getURL()).into(image);
                 Glide.with(ViewallReportActivity.this).load(urlImage).into(image);

@@ -1,8 +1,6 @@
 package com.mmproduction.emsystem;
 
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Handler;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -27,12 +25,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,7 +38,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -52,18 +46,14 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ReportActivity extends AppCompatActivity implements LocationListener{
 
-    String msg, currentdate, currenttime, uid;
+    String msg,location, currentdate, currenttime, uid;
     ImageView mImage;
-    Button mbtncooseimag, mbtnuploadimage;
+    Button mbtncooseimag, mbtnuploadimage,mCaptureImageButton;
     EditText mMassage;
     TextView mtxtDate, mtxtTime;
     FirebaseStorage storage;
@@ -75,6 +65,7 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
     protected Context context;
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_IMAGE_CAPTURE= 101;
     private Uri mImageUri;
 
     private FirebaseAuth mAuth;
@@ -88,15 +79,11 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report1);
+        setContentView(R.layout.activity_report);
 
         //to hide keyboard when activity start
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        //report_akash
-        //sxzhcbdbvc
-        //this is report activity
-        //mprogressbar = (ProgressBar)findViewById(R.id.report_progress_bar);
         mbtncooseimag = (Button) findViewById(R.id.btnChooseimage);
         mbtnuploadimage = (Button) findViewById(R.id.btnUploagImage);
         mImage = (ImageView) findViewById(R.id.add_Image);
@@ -152,16 +139,20 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
                     msg = mMassage.getText().toString();
                     currentdate = mtxtDate.getText().toString();
                     currenttime = mtxtTime.getText().toString();
+                    location = locationText.getText().toString();
                     Current_user = FirebaseAuth.getInstance().getCurrentUser();
                     uid = Current_user.getUid();
 
                     mDatabaseref = FirebaseDatabase.getInstance().getReference().child("reportmsg").child(uid);
                     mDatabaseref1 = FirebaseDatabase.getInstance().getReference("user");
-
-                    uploadImage();
+                    if (!validate_message() || !validate_location()) {
+                        return;
+                    }else {
+                        uploadImage();
+                    }
                     //this is changed
-                    mbtnuploadimage.setEnabled(false);
-                    mbtncooseimag.setEnabled(false);
+                    /*mbtnuploadimage.setEnabled(false);
+                    mbtncooseimag.setEnabled(false);*/
                 } else {
                     Snackbar snackbar = Snackbar.make(mbtnuploadimage, "No Internet Connection", Snackbar.LENGTH_LONG);
                     snackbar.show();
@@ -181,7 +172,7 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
     }
 
     public void onLocationChanged(Location location) {
-        locationText.setText("Latitude: " + location.getLatitude() + "\n Longitude: " + location.getLongitude());
+        locationText.setText("Latitude (" + location.getLatitude() + ") "+ "\n Longitude (" + location.getLongitude() + ") ");
 
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -212,20 +203,6 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-           /* @Override
-            protected void onActivityResult ( int requestCode, int resultCode, Intent data){
-                super.onActivityResult(requestCode, resultCode, data);
-                if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                        && data != null && data.getData() != null) {
-                    filePath = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                        Image.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                }*/
     }
 
     @Override
@@ -242,14 +219,23 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
                 e.printStackTrace();
             }
         }
+        /*if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
+                && data != null && data.getData() != null){
+            mImageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mImageUri);
+                mImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
     }
 
     void uploadImage() {
         if (mImageUri != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-            progressDialog.setCanceledOnTouchOutside(false);
+            mRegprogress.setTitle("Uploading...");
+            mRegprogress.show();
+            mRegprogress.setCanceledOnTouchOutside(false);
 
             FirebaseUser Current_user = FirebaseAuth.getInstance().getCurrentUser();
             String uid = Current_user.getUid().toString();
@@ -260,7 +246,7 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
+                            mRegprogress.dismiss();
 
                             /*ImageUpload upload = new ImageUpload(ref.getDownloadUrl().toString());
                             String uploadid = mDatabaseref.push().getKey();
@@ -273,7 +259,7 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
+                            mRegprogress.dismiss();
                             Toast.makeText(ReportActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -283,7 +269,7 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
                             dataUpload();
-                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                            mRegprogress.setMessage("Uploaded " + (int) progress + "%");
                         }
                     });
         }
@@ -295,12 +281,6 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(final Uri uri) {
-
-                if (!validate_message()) {
-                    return;
-                    /*  Toast.makeText(ReportActivity.this, "Plese write about problem", Toast.LENGTH_LONG).show();
-                     */
-                } else {
 
                     mDatabaseref1 = FirebaseDatabase.getInstance().getReference().child("user").child(uid);
 
@@ -326,6 +306,7 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
                             dataSnapshot.getRef().child("Message").setValue(msg);
                             dataSnapshot.getRef().child("Date").setValue(currentdate);
                             dataSnapshot.getRef().child("Time").setValue(currenttime);
+                            dataSnapshot.getRef().child("Location").setValue(location);
                             dataSnapshot.getRef().child("URL").setValue(uri.toString());
                             // Toast.makeText(ReportActivity.this, "Submit", Toast.LENGTH_SHORT).show();
                                 /*viewReports.setMessage(msg);
@@ -341,17 +322,33 @@ public class ReportActivity extends AppCompatActivity implements LocationListene
                         }
 
                     });
-                }
+
             }
         });
     }
 
     public boolean validate_message() {
         if (mMassage.getText().toString().isEmpty()) {
-            mMassage.setError("Last name is required");
+            mRegprogress.dismiss();
+            Toast.makeText(this,"Message can't be empty!",Toast.LENGTH_LONG).show();;
             return false;
         } else {
             mMassage.setError(null);
+            return true;
+        }
+    }
+
+    public boolean validate_location() {
+        if (locationText.getText().toString().isEmpty()) {
+            mRegprogress.dismiss();
+           Toast.makeText(this,"wait a while! we try to find your location",Toast.LENGTH_LONG).show();
+            return false;
+        }else if (locationText.length() < 10) {
+            mRegprogress.dismiss();
+            Toast.makeText(this,"wait a while! we try to find your location",Toast.LENGTH_LONG).show();
+            return false;
+        }  else {
+            locationText.setError(null);
             return true;
         }
     }

@@ -13,13 +13,14 @@ public class ViewReports {
     private  String Date;
     private  String Time;
     private String URL;
+    private  String Location;
     /*private String mImageUri;*/
 
     public ViewReports(){
 
     }
 
-    public ViewReports(String name,String email, String Message, String Date, String Time,String URL) {
+    public ViewReports(String name,String email, String Message, String Date, String Time,String URL,String Location) {
         this.name = name;
         this.email = email;
         //this.contact_no = contact_no;
@@ -27,6 +28,7 @@ public class ViewReports {
         this.Date = Date;
         this.Time = Time;
         this.URL  = URL;
+        this.Location = Location;
         /*this.mImageUri = mImageUri;*/
 
        // this.Image = Image;
@@ -78,6 +80,14 @@ public class ViewReports {
 
     public void setURL(String URL) {
         this.URL = URL;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
     }
 
     /* public String getmImageUri() {
