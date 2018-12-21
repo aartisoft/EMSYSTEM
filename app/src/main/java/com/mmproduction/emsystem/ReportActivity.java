@@ -4,13 +4,22 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -45,10 +54,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ReportActivity extends AppCompatActivity {
+public class ReportActivity extends AppCompatActivity implements LocationListener{
 
     String msg, currentdate, currenttime, uid;
     ImageView mImage;
@@ -57,6 +68,11 @@ public class ReportActivity extends AppCompatActivity {
     TextView mtxtDate, mtxtTime;
     FirebaseStorage storage;
     StorageReference mstorageReference, ref;
+
+    TextView locationText;
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
+    protected Context context;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri mImageUri;
@@ -90,12 +106,35 @@ public class ReportActivity extends AppCompatActivity {
         mstorageReference = FirebaseStorage.getInstance().getReference("Images");
         mtxtDate = (TextView) findViewById(R.id.in_date);
         mtxtTime = (TextView) findViewById(R.id.in_time);
+        locationText = (TextView)findViewById(R.id.address_location);
+
+        mRegprogress = new ProgressDialog(this);
 
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setTitle("Report");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRegprogress = new ProgressDialog(this);
+        //code for take system date and time
+        long date = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat(" dd-MM-yyyy");
+        String dateString = sdf.format(date);
+        mtxtDate.setText(dateString);
+        SimpleDateFormat sdf1 = new SimpleDateFormat(" h:mm a");
+        String timeString = sdf1.format(date);
+        mtxtTime.setText(timeString);
+
+        //this code is foe ask for location permission
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        }
+
+        getLocation();
+
         mbtncooseimag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,52 +142,68 @@ public class ReportActivity extends AppCompatActivity {
             }
         });
 
-        mDatabaseref1 = FirebaseDatabase.getInstance().getReference("user");
-
-        long date = System.currentTimeMillis();
-
-        SimpleDateFormat sdf = new SimpleDateFormat(" dd-MM-yyyy");
-        String dateString = sdf.format(date);
-        mtxtDate.setText(dateString);
-
-        SimpleDateFormat sdf1 = new SimpleDateFormat(" h:mm a");
-        String timeString = sdf1.format(date);
-        mtxtTime.setText(timeString);
-
-
         mbtnuploadimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (CheckNetwork.isInternetAvailable(ReportActivity.this)) {
+
                     storage = FirebaseStorage.getInstance();
                     mstorageReference = storage.getReference();
-
                     msg = mMassage.getText().toString();
                     currentdate = mtxtDate.getText().toString();
                     currenttime = mtxtTime.getText().toString();
                     Current_user = FirebaseAuth.getInstance().getCurrentUser();
                     uid = Current_user.getUid();
 
-
                     mDatabaseref = FirebaseDatabase.getInstance().getReference().child("reportmsg").child(uid);
+                    mDatabaseref1 = FirebaseDatabase.getInstance().getReference("user");
 
                     uploadImage();
                     //this is changed
                     mbtnuploadimage.setEnabled(false);
                     mbtncooseimag.setEnabled(false);
-
-
                 } else {
                     Snackbar snackbar = Snackbar.make(mbtnuploadimage, "No Internet Connection", Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             }
         });
+    }
 
+    void getLocation() {
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 5, this);
+        }
+        catch(SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onLocationChanged(Location location) {
+        locationText.setText("Latitude: " + location.getLatitude() + "\n Longitude: " + location.getLongitude());
+
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            locationText.setText(locationText.getText() + "\n" + addresses.get(0).getAddressLine(0)/*+ ", " +
+                    addresses.get(0).getAddressLine(1)*/ /*+ ", " + addresses.get(0).getAddressLine(2)*/);
+        }catch(Exception e) {
+            Toast.makeText(ReportActivity.this, "Can't obtain your location", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onProviderDisabled(String provider) {
+        Toast.makeText(ReportActivity.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
     }
 
+    public void onProviderEnabled(String provider) {
 
+    }
 
     //this method for choose image f
     void chooseImage() {
@@ -306,21 +361,8 @@ public class ReportActivity extends AppCompatActivity {
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
-
-
-    /*public void btnsubmit_data(View view) {
-
-        storage = FirebaseStorage.getInstance();
-        mstorageReference = storage.getReference();
-        uploadImage();
-
-
-       // mDatabaseref = FirebaseDatabase.getInstance().getReference().child("reportmsg").child(uid);
-
-        if(!validate_message()){
-          return;
-            *//*  Toast.makeText(ReportActivity.this, "Plese write about problem", Toast.LENGTH_LONG).show();
-     *//*}else {
+}
+/*}else {
 
             FirebaseUser Current_user = FirebaseAuth.getInstance().getCurrentUser();
             String uid = Current_user.getUid();
@@ -449,7 +491,7 @@ public class ReportActivity extends AppCompatActivity {
             mMassage.setError(null);
             return true;
         }*/
-}
+
 
 
     /*@Override

@@ -221,6 +221,10 @@ public class AdminActivity extends AppCompatActivity {
                         startActivity(new Intent(AdminActivity.this, ViewallReportActivity.class));
                         break;
                     }
+                    case R.id.feedback: {
+                        startActivity(new Intent(AdminActivity.this, FeedbackActivity.class));
+                        break;
+                    }
            /* case R.id.Account_setting: {
                 startActivity(new Intent(AdminActivity.this, AccountsettingActivity.class));
                 break;

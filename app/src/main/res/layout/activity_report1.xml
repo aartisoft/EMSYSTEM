@@ -11,137 +11,126 @@
         layout="@layout/app_bar_layout"></include>
 
     <ScrollView
-        android:layout_below="@+id/Register_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Register_toolbar">
 
-    <RelativeLayout
-        android:id="@+id/report_relative_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/mal_text"
+        <RelativeLayout
+            android:id="@+id/report_relative_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Fill Form For indicates mal-practices"
-            android:textAlignment="center"
-            android:textColor="#F44336"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_below="@id/mal_text"
-            android:id="@+id/image_linearlayout"
-            android:layout_width="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/add_Image"
-            android:layout_width="wrap_content"
-            android:layout_height="130dp"
-            android:layout_below="@+id/mal_text"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/cameraicon" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnChooseimage"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/image_linearlayout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="Select Photo"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/btnChooseimage"
-            android:hint="Enter Message here (MAX 150 WORDS)"
-            android:maxLength="250"
-            android:background="@drawable/messageborder"
-            android:padding="5dp"
-            android:gravity="start|top"
-            android:lines="8"/>
-
-       <!-- <TextView
-            android:id="@+id/onlytext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/message"
-            android:layout_toEndOf="@+id/image_linearlayout"
-            android:text="MAX 150 WORDS"
-            android:textColor="@android:color/black" />-->
-
-        <LinearLayout
-            android:id="@+id/date_time_linearlayout"
-            android:layout_below="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true">
-
-        <TextView
-            android:id="@+id/in_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/message"
-            android:hint="DD-MM-YYYY"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
-
-       <!-- <Button
-            android:id="@+id/btn_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/onlytext"
-            android:layout_alignTop="@+id/in_date"
-            android:text="SELECT DATE" />-->
+            android:layout_height="match_parent">
 
             <TextView
-            android:id="@+id/in_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/in_date"
-            android:hint="HH:MM"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"/>
-        </LinearLayout>
+                android:id="@+id/mal_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Fill Form For indicates mal-practices"
+                android:textAlignment="center"
+                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-      <!--  <Button
-            android:id="@+id/btn_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/btn_date"
-            android:layout_alignTop="@+id/in_time"
-            android:text="SELECT TIME" />-->
+            <LinearLayout
+                android:id="@+id/image_linearlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mal_text"
+                android:layout_centerHorizontal="true">
 
-        <Button
-            android:id="@+id/btnUploagImage"
-            android:layout_width="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/date_time_linearlayout"
-            android:background="@drawable/rounde_corner_btn"
-            android:onClick="btnsubmit_data"
-            android:text="Submit"
-            android:layout_marginTop="15dp"/>
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/add_Image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="130dp"
+                    android:layout_below="@+id/mal_text"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/cameraicon" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnChooseimage"
+                android:layout_width="181dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image_linearlayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="Select Photo"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnChooseimage"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/messageborder"
+                android:gravity="start|top"
+                android:hint="Enter Message here (MAX 150 WORDS)"
+                android:lines="8"
+                android:maxLength="250"
+                android:padding="5dp" />
+
+            <LinearLayout
+                android:id="@+id/date_time_linearlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/message"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/in_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/message"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:hint="DD-MM-YYYY"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/in_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/in_date"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:hint="HH:MM"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:textAlignment="center"
+                android:id="@+id/address_location"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/date_time_linearlayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:hint="Address"
+                android:padding="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnUploagImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/address_location"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rounde_corner_btn"
+                android:text="Submit" />
+        </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
